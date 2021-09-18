@@ -425,3 +425,14 @@ td,
 th {
   padding: 0;
 }
+
+.all-buttons {
+  display: inline-flex;
+  flex-flow: wrap;
+  justify-content: center;
+}
+
+.button-group{
+  flex: 1;
+  min-width: 15rem;
+}
