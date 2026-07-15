@@ -43,8 +43,20 @@ const QUIET_ZONE = 4; // modules; 4 is the spec minimum
 const MAX_BLOCK_DAMAGE = 0.6; // refuse to use more than this share of a block's `t`
 const SUBSAMPLES = 8; // raster samples per module, per axis
 
-const INK = "#101012";
-const PAPER = "#ffffff";
+// The pixel-traced mark, not the smooth one the page uses. Its hard orthogonal
+// edges sit on the module grid, so the knockout reads as part of the code
+// rather than a sticker dropped on top.
+const LOGO_SRC = "assets/logo-pixel.svg";
+
+// Light-theme palette from css/style.css: the QR panel stays light in both
+// themes, so these are fixed rather than themed.
+const PAPER = "#f7f1e3"; // --surface
+const INK = "#2b2419"; // --ink, carries the payload
+const ACCENT = "#0f6e63"; // --accent, carries the structure
+
+// Both must binarise as "dark" against PAPER. Relative luminance: ink .016,
+// accent .118, paper .882 — the threshold sits near .5, so both clear it
+// comfortably. Verified by decoding, not by trusting this comment.
 
 /* ── version tables (ECC level H only — that's all we generate) ──────────── */
 
@@ -506,7 +518,7 @@ function parsePath(d) {
 }
 
 function loadLogo() {
-  const svg = readFileSync(join(ROOT, "assets/logo.svg"), "utf8");
+  const svg = readFileSync(join(ROOT, LOGO_SRC), "utf8");
   const viewBox = svg.match(/viewBox="([\d.\s-]+)"/);
   const paths = [...svg.matchAll(/\sd="([^"]+)"/g)];
   if (!viewBox || paths.length === 0) throw new Error("could not read assets/logo.svg");
@@ -639,16 +651,44 @@ function analyseDamage(m, occ, owner, blockCount) {
 
 /* ── SVG output ──────────────────────────────────────────────────────────── */
 
+// The three patterns a scanner uses to *find* and square up the code, as
+// opposed to the modules carrying the payload. Colouring along that seam means
+// the accent traces the code's own anatomy instead of being sprinkled around.
+function isStructural(m, x, y) {
+  const { size, version } = m;
+
+  if (x === 6 || y === 6) return true; // timing
+
+  for (const [cx, cy] of [[3, 3], [size - 4, 3], [3, size - 4]]) {
+    if (Math.max(Math.abs(x - cx), Math.abs(y - cy)) <= 3) return true; // finders
+  }
+
+  const centers = ALIGN_CENTERS[version];
+  for (const cy of centers) {
+    for (const cx of centers) {
+      const nearFinder =
+        (cx === 6 && cy === 6) ||
+        (cx === 6 && cy === size - 7) ||
+        (cx === size - 7 && cy === 6);
+      if (nearFinder) continue;
+      if (Math.max(Math.abs(x - cx), Math.abs(y - cy)) <= 2) return true; // alignment
+    }
+  }
+  return false;
+}
+
 function toSvg(m, occ, logo, raster) {
   const { size, modules } = m;
   const total = size + QUIET_ZONE * 2;
-  const parts = [];
+  const payload = [];
+  const structure = [];
 
-  // One merged path for every drawn module — keeps the file small.
+  // Two merged paths, one per colour. Merging keeps the file small.
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       if (!modules[y][x] || occ.knockedOut[y][x]) continue;
-      parts.push(`M${x + QUIET_ZONE} ${y + QUIET_ZONE}h1v1h-1z`);
+      const rect = `M${x + QUIET_ZONE} ${y + QUIET_ZONE}h1v1h-1z`;
+      (isStructural(m, x, y) ? structure : payload).push(rect);
     }
   }
 
@@ -657,15 +697,16 @@ function toSvg(m, occ, logo, raster) {
   const tx = bounds.x0 + QUIET_ZONE;
   const ty = bounds.y0 + QUIET_ZONE;
 
-  const logoPaths = readFileSync(join(ROOT, "assets/logo.svg"), "utf8")
+  const logoPaths = readFileSync(join(ROOT, LOGO_SRC), "utf8")
     .match(/\sd="([^"]+)"/g)
     .map((d) => d.trim().slice(3, -1));
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" width="${total * 8}" height="${total * 8}" shape-rendering="crispEdges" role="img" aria-label="QR code linking to links.osdc.dev">
   <rect width="${total}" height="${total}" fill="${PAPER}"/>
-  <path fill="${INK}" d="${parts.join("")}"/>
+  <path fill="${INK}" d="${payload.join("")}"/>
+  <path fill="${ACCENT}" d="${structure.join("")}"/>
   <g transform="translate(${tx.toFixed(4)} ${ty.toFixed(4)}) scale(${scale.toFixed(6)})">
-${logoPaths.map((d) => `    <path fill="${INK}" fill-rule="evenodd" d="${d}"/>`).join("\n")}
+${logoPaths.map((d) => `    <path fill="${ACCENT}" fill-rule="evenodd" d="${d}"/>`).join("\n")}
   </g>
 </svg>
 `;

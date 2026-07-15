@@ -1,5 +1,5 @@
 /* ============================================================
-   OSDC — Community Links
+   OSDC Community Links
    Theme toggle · copy email · share / QR modal
    No dependencies. The QR is a static SVG built by tools/qr.mjs.
    ============================================================ */
@@ -84,7 +84,7 @@
   if (copyMail) {
     copyMail.addEventListener("click", function () {
       copyText(EMAIL).then(
-        function () { toast("Email copied — " + EMAIL); },
+        function () { toast("Email copied: " + EMAIL); },
         function () { toast("Couldn't copy. Email: " + EMAIL); }
       );
     });
@@ -151,7 +151,7 @@
       // Prefer the native share sheet when available (mobile), else show the QR.
       if (navigator.share) {
         navigator
-          .share({ title: "OSDC — Links", text: "Every OSDC link in one place", url: pageUrl() })
+          .share({ title: "OSDC Links", text: "Every OSDC link in one place", url: pageUrl() })
           .catch(function () { openModal(); });
       } else {
         openModal();

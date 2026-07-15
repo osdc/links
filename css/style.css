@@ -1,5 +1,5 @@
 /* ============================================================
-   OSDC — Community Links
+   OSDC Community Links
    Poppins, self-hosted. The display face is the logo itself.
    ============================================================ */
 
@@ -8,20 +8,29 @@
 @font-face { font-family: "Poppins"; src: url("../assets/fonts/Poppins-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
 @font-face { font-family: "Poppins"; src: url("../assets/fonts/Poppins-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 
-/* ---------- Theme tokens ---------- */
+/* ---------- Theme tokens ----------
+   Two palettes, both lifted from osdc.dev: the warm "System" beige of the
+   desktop chrome by day, the CRT navy and phosphor green of the monitor by
+   night. Daylight desk, nighttime monitor.
+   ---------------------------------- */
 :root {
-  --bg:        #f1f1ee;
-  --bg-dots:   rgba(0,0,0,.055);
-  --surface:   #ffffff;
-  --ink:       #101012;
-  --muted:     #5c5c60;
-  --line:      #101012;
-  --line-soft: #d9d9d3;
-  --shadow:    #101012;
+  --bg:        #ece2cf;
+  --bg-dots:   rgba(109,100,85,.13);
+  --surface:   #f7f1e3;
+  --ink:       #2b2419;
+  --muted:     #5c5344;
+  --line:      #2b2419;
+  --line-soft: #cfc4ac;
+  --shadow:    #2b2419;
 
-  --accent:      #2f9e44;
-  --accent-2:    #12a594;
-  --accent-grad: linear-gradient(155deg, #5ec25a 0%, #2f9e44 52%, #12a594 100%);
+  --accent:      #0f6e63;
+  --accent-2:    #184e59;
+  /* Kept dark enough that white clears 4.5:1 across the whole ramp. */
+  --accent-grad: linear-gradient(155deg, #17756a 0%, #0f6e63 52%, #133f48 100%);
+  --on-accent:      #ffffff;
+  --on-accent-soft: rgba(255,255,255,.75);
+  --on-accent-line: rgba(255,255,255,.45);
+  --on-accent-fill: rgba(255,255,255,.14);
 
   --radius: 4px;
   --shell-w: 640px;
@@ -29,18 +38,23 @@
 }
 
 :root[data-theme="dark"] {
-  --bg:        #0d0d0f;
-  --bg-dots:   rgba(255,255,255,.05);
-  --surface:   #161619;
-  --ink:       #f2f2ef;
-  --muted:     #9a9aa0;
-  --line:      #f2f2ef;
-  --line-soft: #2a2a2f;
-  --shadow:    #000000;
+  --bg:        #07182a;
+  --bg-dots:   rgba(125,232,255,.08);
+  --surface:   #112338;
+  --ink:       #eaf2f7;
+  --muted:     #8fa6bb;
+  --line:      #eaf2f7;
+  --line-soft: #24405c;
+  --shadow:    #030a12;
 
-  --accent:      #56c46a;
-  --accent-2:    #2bd4bd;
-  --accent-grad: linear-gradient(155deg, #7ee787 0%, #56c46a 48%, #2bd4bd 100%);
+  --accent:      #44ff99;
+  --accent-2:    #7de8ff;
+  --accent-grad: linear-gradient(155deg, #7de8ff 0%, #44ff99 52%, #2bd4bd 100%);
+  /* Phosphor green is far too bright to carry white text. */
+  --on-accent:      #04140a;
+  --on-accent-soft: rgba(4,20,10,.7);
+  --on-accent-line: rgba(4,20,10,.55);
+  --on-accent-fill: rgba(255,255,255,.22);
 }
 
 /* ---------- Base ---------- */
@@ -62,7 +76,7 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
-::selection { background: var(--accent); color: #fff; }
+::selection { background: var(--accent); color: var(--on-accent); }
 
 /* ---------- Skip link ---------- */
 .skip {
@@ -123,7 +137,7 @@ a { color: inherit; text-decoration: none; }
 :root[data-theme="dark"] .ico-moon { display: block; }
 
 /* ---------- Banner ---------- */
-/* The logo *is* the wordmark — no display typeface needed. */
+/* The logo *is* the wordmark, so no display typeface is needed. */
 .banner { margin-bottom: clamp(30px, 7vw, 48px); }
 .banner__mark {
   display: block;
@@ -213,28 +227,25 @@ a { color: inherit; text-decoration: none; }
 .link__tag {
   flex: 0 0 auto;
   font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  color: #fff; background: var(--accent);
+  color: var(--on-accent); background: var(--accent);
   padding: 3px 7px; border-radius: 3px;
 }
 
-/* Primary link — accent fill */
+/* Primary link: accent fill */
 .link--primary {
   background: var(--accent-grad);
   border-color: var(--line);
-  color: #06210f;
+  color: var(--on-accent);
 }
 .link--primary .link__label,
-.link--primary .link__arrow { color: #06210f; }
-.link--primary .link__sub { color: rgba(6,33,15,.7); }
+.link--primary .link__arrow { color: var(--on-accent); }
+.link--primary .link__sub { color: var(--on-accent-soft); }
 .link--primary .link__ico {
-  color: #06210f;
-  border-color: rgba(6,33,15,.55);
-  background: rgba(255,255,255,.22);
+  color: var(--on-accent);
+  border-color: var(--on-accent-line);
+  background: var(--on-accent-fill);
 }
-.link--primary:hover .link__arrow { color: #06210f; transform: translate(2px,-2px); }
-:root[data-theme="dark"] .link--primary,
-:root[data-theme="dark"] .link--primary .link__label,
-:root[data-theme="dark"] .link--primary .link__arrow { color: #04140a; }
+.link--primary:hover .link__arrow { color: var(--on-accent); transform: translate(2px,-2px); }
 
 /* ---------- Socials ---------- */
 .socials {
@@ -252,7 +263,7 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
   transition: transform .12s ease, box-shadow .12s ease, background .2s ease, color .2s ease;
 }
-.social:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--shadow); background: var(--accent); color: #fff; }
+.social:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--shadow); background: var(--accent); color: var(--on-accent); }
 .social:active { transform: translate(3px,3px); box-shadow: 0 0 0 var(--shadow); }
 .social:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .social--copy { border-style: dashed; }
@@ -314,7 +325,7 @@ a { color: inherit; text-decoration: none; }
 
 /* The QR panel stays light in both themes. Inverted codes scan on most modern
    decoders but not all, and this one is meant to be scanned off a stranger's
-   phone at a booth — not the place to get clever.
+   phone at a booth, so this is not the place to get clever.
 
    225px = 45 modules x 5px exactly (37 data + 8 quiet zone), so every module
    lands on a whole pixel. If tools/qr.mjs ever settles on a different version,
@@ -322,14 +333,14 @@ a { color: inherit; text-decoration: none; }
 .qr {
   display: block;
   width: 225px; height: 225px; margin: 0 auto 16px;
-  background: #fff;
+  background: #f7f1e3; /* matches the paper baked into qr.svg */
   border: 2px solid var(--line);
   border-radius: var(--radius);
 }
 .modal__url { margin: 0 0 16px; font-size: 13px; font-weight: 600; color: var(--muted); word-break: break-all; }
 .btn-copy {
   font-family: var(--font-text); font-weight: 700; font-size: 14px;
-  color: #fff; background: var(--accent);
+  color: var(--on-accent); background: var(--accent);
   border: 2px solid var(--line); border-radius: var(--radius);
   padding: 10px 20px; cursor: pointer;
   box-shadow: 3px 3px 0 var(--shadow);
