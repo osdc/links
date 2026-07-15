@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "osdc-links",
+  "compatibility_date": "2026-07-16",
+  // Assets-only Worker: the site lives at the subdomain root, so unlike
+  // osdhack26-links there's no /links prefix to strip and no worker script.
+  "assets": {
+    "directory": "."
+  },
+  // custom_domain provisions the DNS record and certificate for us —
+  // links.osdc.dev currently has no DNS record at all.
+  "routes": [
+    { "pattern": "links.osdc.dev", "custom_domain": true }
+  ]
+}

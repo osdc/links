@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OSDC — Links | Open Source Developers Community</title>
+  <meta name="description" content="Every OSDC link in one place — Discord, GitHub, WhatsApp, Instagram, LinkedIn and more. The Open Source Developers Community in and around JIIT, Noida." />
+  <meta name="theme-color" content="#f1f1ee" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#0d0d0f" media="(prefers-color-scheme: dark)" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="OSDC — Links" />
+  <meta property="og:description" content="Every OSDC link in one place. The Open Source Developers Community in and around JIIT, Noida." />
+  <meta property="og:url" content="https://links.osdc.dev" />
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preload" href="assets/fonts/Poppins-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- No-flash theme: set data-theme before first paint -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('osdc-theme');
+        var sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', saved || sys);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#links">Skip to links</a>
+
+  <!-- decorative pixel corners -->
+  <div class="pixel-corner tl" aria-hidden="true"></div>
+  <div class="pixel-corner br" aria-hidden="true"></div>
+
+  <main class="shell">
+
+    <!-- ============ TOP BAR ============ -->
+    <header class="topbar">
+      <p class="topbar__here">links.osdc.dev</p>
+
+      <div class="topbar__actions">
+        <button class="iconbtn" id="shareBtn" type="button" aria-label="Share this page">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>
+          </svg>
+        </button>
+        <button class="iconbtn" id="themeBtn" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+          <svg class="ico-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
+          </svg>
+          <svg class="ico-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ============ BANNER ============ -->
+    <section class="banner" aria-label="Open Source Developers Community">
+      <img class="banner__mark" src="assets/logo.svg" alt="OSDC" width="1191" height="633" />
+      <p class="banner__name">
+        <span>Open Source Developers Community</span>
+        <span class="dot" aria-hidden="true">&#183;</span>
+        <span>JIIT Noida</span>
+        <span class="dot" aria-hidden="true">&#183;</span>
+        <span>Est. 2011</span>
+      </p>
+      <p class="banner__tag">
+        We build things, break things, ship weird ideas, help each other improve,
+        and leave enough behind for the next batch to keep going.
+      </p>
+    </section>
+
+    <!-- ============ PRIMARY LINKS ============ -->
+    <nav class="links" id="links" aria-label="Primary links">
+
+      <a class="link link--primary" href="https://osdc.dev" target="_blank" rel="noopener">
+        <span class="link__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.4 3.8 5.6 3.8 9S14.5 18.6 12 21C9.5 18.6 8.2 15.4 8.2 12S9.5 5.4 12 3z"/>
+          </svg>
+        </span>
+        <span class="link__body">
+          <span class="link__label">Website</span>
+          <span class="link__sub">osdc.dev</span>
+        </span>
+        <span class="link__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+
+      <a class="link" href="https://discord.gg/osdc" target="_blank" rel="noopener">
+        <span class="link__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M20 5.3A17 17 0 0015.7 4l-.2.4a15.6 15.6 0 014 .3 12.4 12.4 0 00-11.2-.3L8.1 4A17 17 0 003.9 5.3C1.3 9.2.6 13 .9 16.7A17 17 0 006.1 19l.5-.7c-1-.4-1.9-.9-2.7-1.5l.5-.4c3.7 1.7 8 1.7 11.6 0l.5.4c-.8.6-1.7 1.1-2.7 1.5l.5.7a17 17 0 005.2-2.3c.4-4.3-.6-8-2.9-11.4zM8.3 14.5c-1 0-1.9-.9-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.9 2.1-1.9 2.1zm7.3 0c-1 0-1.9-.9-1.9-2.1s.8-2.1 1.9-2.1 1.9 1 1.9 2.1-.9 2.1-1.9 2.1z"/>
+          </svg>
+        </span>
+        <span class="link__body">
+          <span class="link__label">Join the Discord</span>
+          <span class="link__sub">Part helpdesk, part build lab, part meme archive</span>
+        </span>
+        <span class="link__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+
+      <a class="link" href="https://chat.whatsapp.com/EPoq14PDusl2PsAnYFqA4G" target="_blank" rel="noopener">
+        <span class="link__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.14-.14.3-.35.44-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.03 1.02-1.03 2.48s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2-1.42.25-.69.25-1.29.18-1.41-.08-.13-.28-.2-.58-.35M12.05 21.8a9.87 9.87 0 01-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 01-1.51-5.26c0-5.45 4.44-9.89 9.89-9.89 2.64 0 5.12 1.03 6.99 2.9a9.83 9.83 0 012.89 6.99c0 5.45-4.43 9.89-9.89 9.89m8.42-18.3A11.82 11.82 0 0012.05 0C5.5 0 .16 5.34.16 11.9c0 2.09.54 4.14 1.58 5.94L.06 24l6.3-1.65a11.88 11.88 0 005.69 1.45c6.55 0 11.89-5.34 11.89-11.9a11.82 11.82 0 00-3.48-8.4z"/>
+          </svg>
+        </span>
+        <span class="link__body">
+          <span class="link__label">WhatsApp</span>
+          <span class="link__sub">New members start here</span>
+        </span>
+        <span class="link__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+
+      <a class="link" href="https://github.com/osdc" target="_blank" rel="noopener">
+        <span class="link__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M12 1.5A10.5 10.5 0 001.5 12c0 4.64 3 8.57 7.18 9.96.53.1.72-.23.72-.5v-1.9c-2.92.63-3.54-1.24-3.54-1.24-.48-1.2-1.17-1.53-1.17-1.53-.95-.65.07-.64.07-.64 1.06.07 1.61 1.09 1.61 1.09.94 1.6 2.46 1.14 3.06.87.1-.68.37-1.14.66-1.4-2.33-.27-4.78-1.16-4.78-5.18 0-1.15.41-2.08 1.08-2.82-.11-.27-.47-1.35.1-2.8 0 0 .89-.28 2.9 1.08a10 10 0 015.28 0c2-1.36 2.89-1.08 2.89-1.08.58 1.45.22 2.53.11 2.8.68.74 1.08 1.67 1.08 2.82 0 4.03-2.46 4.9-4.8 5.16.38.33.71.97.71 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0022.5 12 10.5 10.5 0 0012 1.5z"/>
+          </svg>
+        </span>
+        <span class="link__body">
+          <span class="link__label">GitHub</span>
+          <span class="link__sub">Where the code lives</span>
+        </span>
+        <span class="link__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+    </nav>
+
+    <!-- ============ NOW ============================================
+         The only time-bound block on the page. When OSDHACK'26 is over,
+         delete this heading and the <nav> below it. Nothing else here
+         goes stale.
+         ========================================================== -->
+    <h2 class="section-head"><span>Now</span></h2>
+    <nav class="links" aria-label="Happening now">
+      <a class="link" href="https://hack.osdc.dev" target="_blank" rel="noopener">
+        <span class="link__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+            <path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="link__body">
+          <span class="link__label">OSDHACK&#8217;26</span>
+          <span class="link__sub">On-Device AI &#183; 5-day hackathon</span>
+        </span>
+        <span class="link__tag">10&#8211;15 Jul</span>
+        <span class="link__arrow" aria-hidden="true">&#8599;</span>
+      </a>
+    </nav>
+
+    <!-- ============ SOCIALS ============ -->
+    <h2 class="section-head"><span>OSDC Everywhere</span></h2>
+    <div class="socials" aria-label="OSDC social links">
+      <a class="social" href="https://osdc.dev" target="_blank" rel="noopener" aria-label="Website — osdc.dev">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.4 3.8 5.6 3.8 9S14.5 18.6 12 21C9.5 18.6 8.2 15.4 8.2 12S9.5 5.4 12 3z"/>
+        </svg>
+      </a>
+      <a class="social" href="https://www.instagram.com/osdc.dev/" target="_blank" rel="noopener" aria-label="Instagram — @osdc.dev">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="0"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+      <a class="social" href="https://github.com/osdc" target="_blank" rel="noopener" aria-label="GitHub — github.com/osdc">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+          <path d="M12 1.5A10.5 10.5 0 001.5 12c0 4.64 3 8.57 7.18 9.96.53.1.72-.23.72-.5v-1.9c-2.92.63-3.54-1.24-3.54-1.24-.48-1.2-1.17-1.53-1.17-1.53-.95-.65.07-.64.07-.64 1.06.07 1.61 1.09 1.61 1.09.94 1.6 2.46 1.14 3.06.87.1-.68.37-1.14.66-1.4-2.33-.27-4.78-1.16-4.78-5.18 0-1.15.41-2.08 1.08-2.82-.11-.27-.47-1.35.1-2.8 0 0 .89-.28 2.9 1.08a10 10 0 015.28 0c2-1.36 2.89-1.08 2.89-1.08.58 1.45.22 2.53.11 2.8.68.74 1.08 1.67 1.08 2.82 0 4.03-2.46 4.9-4.8 5.16.38.33.71.97.71 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0022.5 12 10.5 10.5 0 0012 1.5z"/>
+        </svg>
+      </a>
+      <a class="social" href="https://x.com/osdc_dev" target="_blank" rel="noopener" aria-label="X — @osdc_dev">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+          <path d="M17.5 3h3l-6.6 7.5L21.8 21h-6l-4.7-6.1L5.7 21H2.6l7-8L2.5 3h6.1l4.2 5.6L17.5 3zm-1.1 16.2h1.7L7.7 4.7H5.9l10.5 14.5z"/>
+        </svg>
+      </a>
+      <a class="social" href="https://www.linkedin.com/company/osdcjiit/" target="_blank" rel="noopener" aria-label="LinkedIn — OSDC">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true">
+          <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.86-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.42v1.56h.04c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zm1.78 13.02H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.73V1.73C24 .77 23.21 0 22.23 0z"/>
+        </svg>
+      </a>
+      <a class="social social--mail" href="mailto:contact@osdc.dev" aria-label="Email — contact@osdc.dev">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14"/><path d="M3 6l9 7 9-7"/>
+        </svg>
+      </a>
+      <button class="social social--copy" id="copyMail" type="button" aria-label="Copy email address contact@osdc.dev">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+          <rect x="9" y="9" width="12" height="12"/><path d="M5 15H4V4a1 1 0 011-1h10v1"/>
+        </svg>
+      </button>
+    </div>
+    <p class="mail-line" id="mailLine">contact@osdc.dev</p>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <div class="pixel-heart" aria-hidden="true"></div>
+      <p>Built by the <a href="https://osdc.dev" target="_blank" rel="noopener">Open Source Developers Community</a></p>
+      <p class="footer__fine">&copy; 2026 OSDC &middot; Open source, obviously</p>
+    </footer>
+  </main>
+
+  <!-- ============ SHARE / QR MODAL ============ -->
+  <div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__card">
+      <button class="modal__close iconbtn" data-close type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      </button>
+      <h2 class="modal__title" id="shareTitle">Scan to open</h2>
+      <!-- Generated by tools/qr.mjs — see README. -->
+      <img class="qr" src="assets/qr.svg" alt="QR code linking to links.osdc.dev" width="225" height="225" />
+      <p class="modal__url" id="shareUrl">links.osdc.dev</p>
+      <button class="btn-copy" id="copyLink" type="button">Copy link</button>
+    </div>
+  </div>
+
+  <!-- toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

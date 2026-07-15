@@ -1,0 +1,10 @@
+.git/
+.gitignore
+.assetsignore
+.wrangler/
+wrangler.jsonc
+node_modules/
+tools/
+README.md
+LICENSE
+*.zip
