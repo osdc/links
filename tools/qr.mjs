@@ -50,13 +50,13 @@ const LOGO_SRC = "assets/logo-pixel.svg";
 
 // Light-theme palette from css/style.css: the QR panel stays light in both
 // themes, so these are fixed rather than themed.
-const PAPER = "#f7f1e3"; // --surface
-const INK = "#2b2419"; // --ink, carries the payload
-const ACCENT = "#0f6e63"; // --accent, carries the structure
+const PAPER = "#f4eddc"; // --bg
+const INK = "#262014"; // --ink, carries the payload
+const ACCENT = "#a04a00"; // --accent, carries the structure
 
-// Both must binarise as "dark" against PAPER. Relative luminance: ink .016,
-// accent .118, paper .882 — the threshold sits near .5, so both clear it
-// comfortably. Verified by decoding, not by trusting this comment.
+// Both must binarise as "dark" against PAPER. Relative luminance: ink .014,
+// accent .124, paper .850. A binariser splits near the midpoint, so both land
+// well on the dark side. Verified by decoding rather than by trusting this.
 
 /* ── version tables (ECC level H only — that's all we generate) ──────────── */
 
