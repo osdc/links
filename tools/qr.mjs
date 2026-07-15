@@ -27,10 +27,12 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /* ── configuration ───────────────────────────────────────────────────────── */
 
-// Uppercase so the payload fits QR's alphanumeric mode (~5.5 bits/char instead
-// of 8). Scheme and host are case-insensitive per RFC 3986, so scanners open
-// this exactly like the lowercase form.
-const PAYLOAD = "HTTPS://LINKS.OSDC.DEV";
+// Byte mode, lowercase. Uppercase would fit QR's alphanumeric mode (~5.5
+// bits/char instead of 8), but that saving buys nothing here: both modes fit
+// from v3 up, and the version is decided by how much of the code the logo
+// eats, not by how tightly the URL packs. Since density is free, spend it on
+// a payload that reads properly in a scanner's preview.
+const PAYLOAD = "https://links.osdc.dev";
 
 // 0.40 is the largest the logo goes before every candidate version fails: v3/v4
 // run out of correction budget, and v7-v10 all put an alignment pattern dead
@@ -87,7 +89,6 @@ const ALIGN_CENTERS = {
   10: [6, 28, 50],
 };
 
-const ALNUM = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
 const ECC_H_FORMAT_BITS = 0b10;
 
 const sizeOf = (version) => version * 4 + 17;
@@ -148,23 +149,17 @@ function rsRemainder(data, degree) {
 
 /* ── encoding ────────────────────────────────────────────────────────────── */
 
-function encodeAlphanumeric(text, version) {
+function encodeByte(text, version) {
   const bits = [];
   const push = (value, len) => {
     for (let i = len - 1; i >= 0; i--) bits.push((value >>> i) & 1);
   };
 
-  for (const ch of text) {
-    if (!ALNUM.includes(ch)) throw new Error(`'${ch}' is not alphanumeric-mode safe`);
-  }
+  const data = new TextEncoder().encode(text);
 
-  push(0b0010, 4); // alphanumeric mode indicator
-  push(text.length, version <= 9 ? 9 : 11); // char count
-
-  for (let i = 0; i + 1 < text.length; i += 2) {
-    push(ALNUM.indexOf(text[i]) * 45 + ALNUM.indexOf(text[i + 1]), 11);
-  }
-  if (text.length % 2) push(ALNUM.indexOf(text[text.length - 1]), 6);
+  push(0b0100, 4); // byte mode indicator
+  push(data.length, version <= 9 ? 8 : 16); // char count
+  for (const b of data) push(b, 8);
 
   const capacityBits = dataCodewords(version) * 8;
   if (bits.length > capacityBits) return null;
@@ -716,19 +711,20 @@ ${logoPaths.map((d) => `    <path fill="${ACCENT}" fill-rule="evenodd" d="${d}"/
 
 // qrencode picks its own mask, so we assert its matrix equals one of our eight.
 // That checks encoding, ECC, and placement against an independent implementation.
+// -8 forces byte mode so both sides encode the same way.
 function selftest() {
   let failures = 0;
 
-  for (const text of [PAYLOAD, "HELLO WORLD", "HTTPS://OSDC.DEV", "ABC123$%*+-./:"]) {
+  for (const text of [PAYLOAD, "hello world", "https://osdc.dev", "MiXeD/Case-123"]) {
     let version = 1;
     let data = null;
-    while (version <= 10 && !(data = encodeAlphanumeric(text, version))) version++;
+    while (version <= 10 && !(data = encodeByte(text, version))) version++;
     if (!data) {
       console.log(`  SKIP  ${text} (does not fit v1-10 at ECC H)`);
       continue;
     }
 
-    const ref = execFileSync("qrencode", ["-l", "H", "-v", String(version), "-t", "ASCII", "--", text], {
+    const ref = execFileSync("qrencode", ["-8", "-l", "H", "-v", String(version), "-t", "ASCII", "--", text], {
       encoding: "utf8",
     });
     // qrencode's ASCII output uses '#' for dark, two chars per module, and a
@@ -776,7 +772,7 @@ function build() {
   const logo = loadLogo();
 
   for (let version = 1; version <= 10; version++) {
-    const data = encodeAlphanumeric(PAYLOAD, version);
+    const data = encodeByte(PAYLOAD, version);
     if (!data) continue;
 
     const { codewords, owner, blockCount, t } = buildCodewords(data, version);
@@ -817,7 +813,7 @@ function build() {
     }
 
     console.log(`  ${label}: accepted\n`);
-    console.log(`  payload            ${PAYLOAD} (alphanumeric, ${PAYLOAD.length} chars)`);
+    console.log(`  payload            ${PAYLOAD} (byte mode, ${PAYLOAD.length} chars)`);
     console.log(`  mask               ${best.mask} (penalty ${best.score})`);
     console.log(`  blocks             ${blockCount} x (${RS_BLOCKS_H[version][0]} EC codewords, t=${t})`);
     console.log(`  modules blanked    ${knocked} of ${best.m.size ** 2} (${((knocked / best.m.size ** 2) * 100).toFixed(1)}%)`);
@@ -836,7 +832,7 @@ function build() {
   process.exit(1);
 }
 
-export { encodeAlphanumeric, buildCodewords, buildMatrix, penalty, loadLogo };
+export { encodeByte, buildCodewords, buildMatrix, penalty, loadLogo };
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   if (process.argv[2] === "--selftest") selftest();

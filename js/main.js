@@ -160,8 +160,10 @@
   }
 
   if (modal) {
+    // closest(), not target: the close button wraps an <svg>, so a click on the
+    // icon reports the <svg> as the target and never the button itself.
     modal.addEventListener("click", function (e) {
-      if (e.target.hasAttribute("data-close")) closeModal();
+      if (e.target.closest("[data-close]")) closeModal();
     });
   }
 
