@@ -187,7 +187,12 @@ a { color: inherit; text-decoration: none; }
   color: var(--muted);
   transition: color .15s ease;
 }
+/* Fixed 24px so the arrow and the copy button occupy an identical slot. The
+   brand marks then line up in a true column down the right edge, whichever
+   trailing control a row happens to carry. */
 .entry__go {
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
   color: var(--muted);
   font-size: 16px;
   line-height: 1;
@@ -209,21 +214,37 @@ a.entry:focus-visible {
 /* The featured entry: the only place a name is set in the accent by default. */
 .entry--now .entry__name { color: var(--accent); }
 
-/* ---------- Copy button ---------- */
-.copy {
-  flex: 0 0 auto;
+/* An action, not a destination. Same slot and same size as the arrow it
+   replaces, so the right edge of every row still lines up; the dotted box is
+   what says this one does something instead of going somewhere. */
+.entry__act {
+  display: grid; place-items: center;
+  width: 24px; height: 24px;
+  padding: 0;
+  color: var(--muted);
+  background: none;
+  border: 1px dotted var(--muted);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+.entry__act:hover { color: var(--accent); border-color: var(--accent); }
+.entry__act:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- Text button (modal) ---------- */
+.btn {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--muted);
   background: none;
   border: 1px solid var(--rule);
   border-radius: 2px;
-  padding: 4px 10px;
+  padding: 5px 12px;
   cursor: pointer;
   transition: color .15s ease, border-color .15s ease;
 }
-.copy:hover { color: var(--accent); border-color: var(--accent); }
-.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn:hover { color: var(--accent); border-color: var(--accent); }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ---------- Footer ---------- */
 .foot {
