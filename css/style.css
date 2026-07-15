@@ -122,7 +122,6 @@ a { color: inherit; text-decoration: none; }
 .intro__who {
   margin: 0 0 14px;
   color: var(--muted);
-  text-transform: uppercase;
 }
 .intro__lede {
   margin: 0;
@@ -246,7 +245,6 @@ a.entry:focus-visible {
 .modal__title {
   margin: 0 0 14px;
   color: var(--muted);
-  text-transform: uppercase;
 }
 
 /* The QR stays on light paper in both themes. Inverted codes scan on most
