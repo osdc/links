@@ -171,10 +171,25 @@ a { color: inherit; text-decoration: none; }
   color: var(--muted);
   overflow-wrap: anywhere;
 }
-.entry__go {
+/* The brand mark and the arrow are a pair at the right edge: the icon says
+   which service, the arrow says it leaves the page. Keeping them together in
+   one box leaves the left rail as just the number. */
+.entry__end {
   flex: 0 0 auto;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.entry__ico {
+  display: grid; place-items: center;
+  width: 16px; height: 16px;
   color: var(--muted);
-  font-size: 18px;
+  transition: color .15s ease;
+}
+.entry__go {
+  color: var(--muted);
+  font-size: 16px;
   line-height: 1;
   transition: color .15s ease, transform .15s ease;
 }
@@ -182,6 +197,7 @@ a { color: inherit; text-decoration: none; }
 a.entry:hover { border-bottom-color: var(--accent); }
 a.entry:hover .entry__name,
 a.entry:hover .entry__num,
+a.entry:hover .entry__ico,
 a.entry:hover .entry__go { color: var(--accent); }
 a.entry:hover .entry__go { transform: translate(3px, -3px); }
 a.entry:focus-visible {
