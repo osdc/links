@@ -56,9 +56,16 @@ const PAPER = "#faf9f6"; // --paper
 const INK = "#14120f"; // --ink, carries the payload
 const ACCENT = "#c62d1c"; // --accent, carries the structure
 
-// Both must binarise as "dark" against PAPER. A red accent is the risky one:
-// its luminance is .14 against paper at .96, so it still lands well below the
-// midpoint a binariser splits on. Verified by decoding, not by trusting this.
+// The dark theme reuses its own palette but never inverts: a QR with light
+// modules on a dark ground fails both zbarimg and OpenCV outright, so dark
+// mode swaps the roles instead (its --ink becomes the paper) and keeps the
+// legal dark-on-light polarity. See css/style.css --qr-*.
+//
+// The accent is the one that needs care, because it carries the finder and
+// alignment patterns: if a binariser reads it as light, detection dies. Tested
+// on this exact code, OpenCV fails at luminance .322 and passes at .261, so
+// the dark accent is #e84c33 (.226) rather than the page's #ff6a55 (.322).
+// Light ink .006 / accent .140 / paper .947. Verified by decoding both themes.
 
 /* ── version tables (ECC level H only — that's all we generate) ──────────── */
 
@@ -672,7 +679,7 @@ function isStructural(m, x, y) {
   return false;
 }
 
-function toSvg(m, occ, logo, raster) {
+function toSvg(m, occ, logo, raster, mode) {
   const { size, modules } = m;
   const total = size + QUIET_ZONE * 2;
   const payload = [];
@@ -696,11 +703,28 @@ function toSvg(m, occ, logo, raster) {
     .match(/\sd="([^"]+)"/g)
     .map((d) => d.trim().slice(3, -1));
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" width="${total * 8}" height="${total * 8}" shape-rendering="crispEdges" role="img" aria-label="QR code linking to links.osdc.dev">
+  const g = `translate(${tx.toFixed(4)} ${ty.toFixed(4)}) scale(${scale.toFixed(6)})`;
+
+  // Inline: coloured by the page's CSS custom properties, so it follows the
+  // theme toggle. An <img> could not, since it never sees the page stylesheet.
+  if (mode === "inline") {
+    return `<svg class="qr" viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges" role="img" aria-label="QR code linking to ${PAYLOAD.replace(/^https?:\/\//, "")}">
+        <rect class="qr__paper" width="${total}" height="${total}"/>
+        <path class="qr__ink" d="${payload.join("")}"/>
+        <path class="qr__accent" d="${structure.join("")}"/>
+        <g class="qr__accent" transform="${g}">
+${logoPaths.map((d) => `          <path fill-rule="evenodd" d="${d}"/>`).join("\n")}
+        </g>
+      </svg>`;
+  }
+
+  // Standalone: colours baked in, for print and for anyone who fetches the
+  // file directly. Always the light palette, which is what paper wants.
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" width="${total * 8}" height="${total * 8}" shape-rendering="crispEdges" role="img" aria-label="QR code linking to ${PAYLOAD.replace(/^https?:\/\//, "")}">
   <rect width="${total}" height="${total}" fill="${PAPER}"/>
   <path fill="${INK}" d="${payload.join("")}"/>
   <path fill="${ACCENT}" d="${structure.join("")}"/>
-  <g transform="translate(${tx.toFixed(4)} ${ty.toFixed(4)}) scale(${scale.toFixed(6)})">
+  <g transform="${g}">
 ${logoPaths.map((d) => `    <path fill="${ACCENT}" fill-rule="evenodd" d="${d}"/>`).join("\n")}
   </g>
 </svg>
@@ -822,9 +846,20 @@ function build() {
     console.log(`  worst block        ${worst}/${t} = ${(usage * 100).toFixed(0)}% of correction capacity`);
     console.log(`  headroom           ${t - worst} more codeword errors tolerated in the worst block`);
 
-    const svg = toSvg(best.m, occ, logo, raster);
-    writeFileSync(join(ROOT, "assets/qr.svg"), svg);
-    console.log(`\n  wrote assets/qr.svg (${(svg.length / 1024).toFixed(1)} KB)`);
+    const standalone = toSvg(best.m, occ, logo, raster, "standalone");
+    writeFileSync(join(ROOT, "assets/qr.svg"), standalone);
+    console.log(`\n  wrote assets/qr.svg (${(standalone.length / 1024).toFixed(1)} KB)`);
+
+    const inline = toSvg(best.m, occ, logo, raster, "inline");
+    const page = join(ROOT, "index.html");
+    const html = readFileSync(page, "utf8");
+    const START = "<!-- qr:start -->";
+    const END = "<!-- qr:end -->";
+    const a = html.indexOf(START);
+    const b = html.indexOf(END);
+    if (a < 0 || b < 0) throw new Error("index.html is missing the qr:start / qr:end markers");
+    writeFileSync(page, html.slice(0, a + START.length) + "\n      " + inline + "\n      " + html.slice(b));
+    console.log(`  inlined into index.html (${(inline.length / 1024).toFixed(1)} KB)`);
     return;
   }
 

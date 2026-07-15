@@ -29,6 +29,10 @@
   --rule:   #e4e0d7;
   --accent: #c62d1c;
 
+  --qr-paper:  #faf9f6;
+  --qr-ink:    #14120f;
+  --qr-accent: #c62d1c;
+
   --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --page: 620px;
@@ -40,6 +44,10 @@
   --muted:  #9a938a;
   --rule:   #2a2825;
   --accent: #ff6a55;
+
+  --qr-paper:  #f4f2ed;
+  --qr-ink:    #100f0d;
+  --qr-accent: #e84c33;
 }
 
 /* ---------- Base ---------- */
@@ -284,19 +292,28 @@ a.entry:focus-visible {
   color: var(--muted);
 }
 
-/* The QR stays on light paper in both themes. Inverted codes scan on most
-   modern decoders but not all, and this one gets scanned off a stranger's
-   phone at a booth, so it is not the place to get clever.
+/* The QR follows the theme, but it never inverts. Light modules on a dark
+   ground fail zbarimg and OpenCV outright, so dark mode swaps the roles of its
+   own palette instead: --ink becomes the paper, --paper becomes the modules,
+   and the polarity stays legal.
+
+   --qr-accent is not the page accent. It carries the finder and alignment
+   patterns, so a binariser has to read it as dark; measured on this code,
+   OpenCV fails at luminance .322 (the page's #ff6a55) and passes at .261, so
+   dark mode uses #e84c33 at .226.
+
    225px = 45 modules x 5px exactly (37 data + 8 quiet zone), so every module
    lands on a whole pixel. If tools/qr.mjs picks another version, re-derive:
    (size + 8) * 5. */
-.qr {
+svg.qr {
   display: block;
   width: 225px; height: 225px;
   margin: 0 auto 12px;
-  background: #faf9f6;
   border-radius: 2px;
 }
+.qr__paper  { fill: var(--qr-paper); }
+.qr__ink    { fill: var(--qr-ink); }
+.qr__accent { fill: var(--qr-accent); }
 .modal__url { margin: 0 0 14px; color: var(--muted); word-break: break-all; }
 
 /* ---------- Toast ---------- */
