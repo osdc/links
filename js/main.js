@@ -233,6 +233,11 @@
       impactTimer = setTimeout(function () { logoBreaker.classList.remove("is-hit"); }, 150);
     }
 
+    function vibrate(pattern) {
+      if (!navigator.vibrate) return;
+      try { navigator.vibrate(pattern); } catch (e) {}
+    }
+
     function logoCenter() {
       var rect = logoBreaker.getBoundingClientRect();
       return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
@@ -262,6 +267,7 @@
       if (revealed) {
         burstParticles(point, 9, .85);
         impact();
+        vibrate(12);
         return;
       }
 
@@ -270,8 +276,10 @@
       impact();
 
       if (damage >= BREAK_AT) {
+        vibrate([45, 28, 70, 32, 110]);
         revealPixelLogo(point);
       } else {
+        vibrate(6 + damage * 4);
         renderDamage();
         scheduleRepair();
       }
