@@ -36,7 +36,13 @@
 
     <!-- ============ HEAD ============ -->
     <header class="head">
-      <img class="head__mark" src="assets/logo.svg" alt="OSDC" width="2058" height="1079" />
+      <button class="head__mark logo-breaker" id="logoBreaker" type="button" aria-label="OSDC logo, activate for a surprise">
+        <span class="logo-breaker__art" aria-hidden="true">
+          <img class="logo-breaker__fallback" src="assets/logo.svg" alt="" width="2058" height="1079" />
+          <span class="logo-breaker__fragments"></span>
+          <img class="logo-breaker__pixel" src="assets/logo-pixel.svg" alt="" width="1191" height="633" />
+        </span>
+      </button>
       <div class="tools">
         <button class="tool" id="shareBtn" type="button" aria-label="Share this page">
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

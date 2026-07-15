@@ -1,6 +1,6 @@
 /* ============================================================
    OSDC Community Links
-   Theme toggle · copy email · share / QR modal
+   Theme toggle · logo easter egg · copy email · share / QR modal
    No dependencies. The QR is a static SVG built by tools/qr.mjs.
    ============================================================ */
 (function () {
@@ -75,6 +75,206 @@
       root.setAttribute("data-theme", next);
       try { localStorage.setItem("osdc-theme", next); } catch (e) {}
       syncThemeBtn();
+    });
+  }
+
+  /* ---------- logo easter egg ---------- */
+
+  var logoBreaker = document.getElementById("logoBreaker");
+
+  if (logoBreaker) {
+    var fragmentHost = logoBreaker.querySelector(".logo-breaker__fragments");
+    var particleHost = document.createElement("div");
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var fragments = [];
+    var damage = 0;
+    var repairDelay;
+    var repairTick;
+    var impactTimer;
+    var lastPointer = null;
+    var revealed = false;
+    var BREAK_AT = 10;
+    var COLS = 8;
+    var ROWS = 4;
+    var MAX_PARTICLES = 120;
+
+    particleHost.className = "logo-particles";
+    particleHost.setAttribute("aria-hidden", "true");
+    document.body.appendChild(particleHost);
+
+    function shuffledIndexes(length) {
+      var indexes = [];
+      var i;
+      for (i = 0; i < length; i += 1) indexes.push(i);
+      for (i = length - 1; i > 0; i -= 1) {
+        var swap = Math.floor(Math.random() * (i + 1));
+        var value = indexes[i];
+        indexes[i] = indexes[swap];
+        indexes[swap] = value;
+      }
+      return indexes;
+    }
+
+    if (fragmentHost) {
+      var totalFragments = COLS * ROWS;
+      var damageOrder = shuffledIndexes(totalFragments);
+
+      for (var row = 0; row < ROWS; row += 1) {
+        for (var col = 0; col < COLS; col += 1) {
+          var fragment = document.createElement("span");
+          var index = row * COLS + col;
+          var xDirection = col < COLS / 2 ? -1 : 1;
+          var xDrift = xDirection * (3 + Math.random() * 6);
+          var yDrift = (Math.random() - .5) * 9;
+          var rotation = (Math.random() - .5) * 5;
+
+          fragment.className = "logo-fragment";
+          fragment.style.clipPath = "inset(" +
+            (row * 100 / ROWS) + "% " +
+            ((COLS - col - 1) * 100 / COLS) + "% " +
+            ((ROWS - row - 1) * 100 / ROWS) + "% " +
+            (col * 100 / COLS) + "%)";
+          fragment.style.setProperty("--split-x", (xDirection * (42 + Math.random() * 34)) + "px");
+          fragment.style.setProperty("--split-y", ((Math.random() - .35) * 28) + "px");
+          fragment.style.setProperty("--split-r", (xDirection * (4 + Math.random() * 7)) + "deg");
+          fragmentHost.appendChild(fragment);
+
+          fragments.push({
+            el: fragment,
+            order: damageOrder[index],
+            x: xDrift,
+            y: yDrift,
+            rotation: rotation
+          });
+        }
+      }
+
+      logoBreaker.classList.add("is-ready");
+    }
+
+    function renderDamage() {
+      var progress = Math.max(0, damage - 2) / (BREAK_AT - 2);
+      var affected = Math.ceil(progress * fragments.length);
+      var missing = Math.max(0, damage - 4) * 2;
+
+      fragments.forEach(function (fragment) {
+        var isDamaged = fragment.order < affected;
+        fragment.el.classList.toggle("is-damaged", isDamaged);
+        fragment.el.classList.toggle("is-missing", isDamaged && fragment.order < missing);
+        fragment.el.style.setProperty("--damage-x", (fragment.x * progress) + "px");
+        fragment.el.style.setProperty("--damage-y", (fragment.y * progress) + "px");
+        fragment.el.style.setProperty("--damage-r", (fragment.rotation * progress) + "deg");
+      });
+    }
+
+    function stopRepair() {
+      clearTimeout(repairDelay);
+      clearInterval(repairTick);
+    }
+
+    function scheduleRepair() {
+      stopRepair();
+      repairDelay = setTimeout(function () {
+        repairTick = setInterval(function () {
+          damage = Math.max(0, damage - 1);
+          renderDamage();
+          if (damage === 0) clearInterval(repairTick);
+        }, 170);
+      }, 700);
+    }
+
+    function trimParticles() {
+      while (particleHost.childElementCount >= MAX_PARTICLES) {
+        particleHost.firstElementChild.remove();
+      }
+    }
+
+    function burstParticles(point, count, strength) {
+      if (reduceMotion.matches || !Element.prototype.animate) return;
+
+      for (var i = 0; i < count; i += 1) {
+        trimParticles();
+        var particle = document.createElement("i");
+        var size = 3 + Math.floor(Math.random() * 5);
+        var angle = Math.random() * Math.PI * 2;
+        var distance = (24 + Math.random() * 42) * strength;
+        var x = Math.cos(angle) * distance;
+        var lift = Math.sin(angle) * distance - 18 * strength;
+        var fall = lift + 34 + Math.random() * 34;
+        var turn = (Math.random() > .5 ? 1 : -1) * (90 + Math.random() * 270);
+
+        particle.className = "logo-particle";
+        particle.style.left = point.x + "px";
+        particle.style.top = point.y + "px";
+        particle.style.width = size + "px";
+        particle.style.height = size + "px";
+        particleHost.appendChild(particle);
+
+        (function (el) {
+          var animation = el.animate([
+            { transform: "translate(-50%, -50%) scale(1)", opacity: 1 },
+            { transform: "translate(calc(-50% + " + (x * .72) + "px), calc(-50% + " + lift + "px)) rotate(" + (turn * .55) + "deg)", opacity: 1, offset: .62 },
+            { transform: "translate(calc(-50% + " + x + "px), calc(-50% + " + fall + "px)) rotate(" + turn + "deg)", opacity: 0 }
+          ], {
+            duration: 430 + Math.random() * 270,
+            easing: "cubic-bezier(.16, .7, .22, 1)",
+            fill: "forwards"
+          });
+          animation.finished.then(function () { el.remove(); }, function () { el.remove(); });
+        })(particle);
+      }
+    }
+
+    function impact() {
+      clearTimeout(impactTimer);
+      logoBreaker.classList.remove("is-hit");
+      void logoBreaker.offsetWidth;
+      logoBreaker.classList.add("is-hit");
+      impactTimer = setTimeout(function () { logoBreaker.classList.remove("is-hit"); }, 150);
+    }
+
+    function logoCenter() {
+      var rect = logoBreaker.getBoundingClientRect();
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }
+
+    function revealPixelLogo(point) {
+      revealed = true;
+      stopRepair();
+      logoBreaker.classList.add("is-revealed");
+      logoBreaker.setAttribute("aria-label", "Pixelated OSDC logo, activate for particles");
+      document.body.classList.add("logo-shake");
+      burstParticles(point, 38, 1.65);
+      setTimeout(function () {
+        document.body.classList.remove("logo-shake");
+        logoBreaker.classList.add("is-settled");
+      }, 520);
+    }
+
+    logoBreaker.addEventListener("pointerdown", function (event) {
+      if (event.isPrimary) lastPointer = { x: event.clientX, y: event.clientY };
+    });
+
+    logoBreaker.addEventListener("click", function (event) {
+      var point = event.detail === 0 ? logoCenter() : (lastPointer || { x: event.clientX, y: event.clientY });
+      lastPointer = null;
+
+      if (revealed) {
+        burstParticles(point, 9, .85);
+        impact();
+        return;
+      }
+
+      damage = Math.min(BREAK_AT, damage + 1);
+      burstParticles(point, 7 + damage, .8 + damage * .035);
+      impact();
+
+      if (damage >= BREAK_AT) {
+        revealPixelLogo(point);
+      } else {
+        renderDamage();
+        scheduleRepair();
+      }
     });
   }
 
