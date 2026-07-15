@@ -1,47 +1,45 @@
 /* ============================================================
    OSDC Community Links
 
-   The page is a shell session. osdc.dev is a CRT you click into,
-   with a working xterm and a neofetch clone behind it; this is the
-   same room, just smaller. Every link is a row of `ls` output.
+   Set like the index of a printed manual: a number, a name, a
+   hairline. The type does the work, so there is nothing else on
+   the page to look at.
 
-   Rules that hold the whole thing together:
-     - one face, two weights, like a real terminal
-     - nothing is a card; nothing has a shadow
-     - hover is inverse video, because that is what a terminal does
-     - amber phosphor, because a monochrome monitor only had one colour
+   Rules:
+     - names are big enough to read at a glance, and that wins
+       over every other consideration
+     - two type sizes carry the hierarchy: names large, meta small
+     - mono is only for machine text (numbers, URLs, labels)
+     - colour is near-monochrome; the accent belongs to interaction
    ============================================================ */
 
+/* One variable file, wght 100-700. */
+@font-face {
+  font-family: "IBM Plex Sans";
+  src: url("../assets/fonts/IBMPlexSans.woff2") format("woff2");
+  font-weight: 100 700;
+  font-display: swap;
+}
 @font-face { font-family: "IBM Plex Mono"; src: url("../assets/fonts/IBMPlexMono-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
-@font-face { font-family: "IBM Plex Mono"; src: url("../assets/fonts/IBMPlexMono-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 
-/* ---------- Theme tokens ----------
-   Dark is an amber monochrome monitor. Light is the printout it spat
-   out: same warm ink, on paper.
-   ---------------------------------- */
 :root {
-  --bg:       #f4eddc;
-  --surface:  #fbf7ec;
-  --ink:      #262014;
-  --muted:    #574c3a;
-  --faint:    #736550;
-  --line:     #ddd1b6;
-  --accent:   #a04a00;
-  --on-accent:#fbf7ec;
+  --paper:  #faf9f6;
+  --ink:    #14120f;
+  --muted:  #6b655c;
+  --rule:   #e4e0d7;
+  --accent: #c62d1c;
 
-  --shell-w: 660px;
-  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --page: 620px;
 }
 
 :root[data-theme="dark"] {
-  --bg:       #12100c;
-  --surface:  #1b1811;
-  --ink:      #e8dcc2;
-  --muted:    #b0a48a;
-  --faint:    #8f8368;
-  --line:     #2f2a1e;
-  --accent:   #ffb000;
-  --on-accent:#12100c;
+  --paper:  #100f0d;
+  --ink:    #f4f2ed;
+  --muted:  #9a938a;
+  --rule:   #2a2825;
+  --accent: #ff6a55;
 }
 
 /* ---------- Base ---------- */
@@ -51,310 +49,242 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   min-height: 100dvh;
-  font-family: var(--mono);
-  font-size: 14px;
-  line-height: 1.6;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
   color: var(--ink);
-  background: var(--bg);
-  overflow-x: hidden;
-  transition: background-color .2s linear, color .2s linear;
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .2s ease, color .2s ease;
 }
 
 a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent); color: var(--paper); }
 
-::selection { background: var(--accent); color: var(--on-accent); }
+.page {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(28px, 7vw, 72px) clamp(20px, 6vw, 32px) 72px;
+}
+
+/* Small machine text: section labels, the meta line, numbers. */
+.mono {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+}
 
 /* ---------- Skip link ---------- */
 .skip {
-  position: absolute; left: 0; top: -60px; z-index: 70;
+  position: absolute; left: 12px; top: -60px; z-index: 70;
   padding: 8px 14px;
-  font: 700 13px var(--mono);
-  color: var(--on-accent); background: var(--accent);
-  transition: top .12s linear;
+  font-size: 14px; font-weight: 600;
+  color: var(--paper); background: var(--ink);
+  border-radius: 2px;
+  transition: top .15s ease;
 }
-.skip:focus { top: 0; }
-
-/* ---------- Shell ---------- */
-.shell {
-  width: 100%;
-  max-width: var(--shell-w);
-  margin: 0 auto;
-  padding: clamp(24px, 6vw, 56px) clamp(16px, 5vw, 24px) 64px;
-}
-
-/* ---------- Prompt line ----------
-   Doubles as every section heading. The `$` is the only ornament on
-   the page, so it gets the accent.
-   --------------------------------- */
-.prompt {
-  margin: 0 0 12px;
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.prompt::before {
-  content: "$";
-  color: var(--accent);
-  font-weight: 700;
-  margin-right: .75ch;
-}
-.prompt b { color: var(--ink); font-weight: 700; }
-.prompt i { color: var(--faint); font-style: normal; }
-
-.block { margin: 0 0 clamp(28px, 5vw, 40px); }
+.skip:focus { top: 12px; }
 
 /* ---------- Header ---------- */
-.topbar {
+.head {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: clamp(24px, 5vw, 36px);
+  gap: 20px;
+  margin-bottom: clamp(28px, 6vw, 44px);
 }
-.topbar__here { margin: 0; font-size: 13px; color: var(--muted); }
-.topbar__here b { color: var(--accent); font-weight: 700; }
-.topbar__actions { display: flex; gap: 6px; flex: 0 0 auto; }
+.head__mark {
+  display: block;
+  width: clamp(112px, 30vw, 168px);
+  height: auto;
+}
+:root[data-theme="dark"] .head__mark { filter: invert(1); }
 
-.iconbtn {
+.tools { display: flex; gap: 2px; flex: 0 0 auto; margin-top: 2px; }
+.tool {
   display: inline-grid; place-items: center;
-  width: 30px; height: 30px;
+  width: 34px; height: 34px;
   padding: 0;
   color: var(--muted);
-  background: none;
-  border: 1px solid var(--line);
+  background: none; border: 0;
+  border-radius: 2px;
   cursor: pointer;
-  transition: color .12s linear, border-color .12s linear, background .12s linear;
+  transition: color .15s ease, background .15s ease;
 }
-.iconbtn:hover { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
-.iconbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
+.tool:hover { color: var(--accent); }
+.tool:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .ico-moon { display: none; }
 :root[data-theme="dark"] .ico-sun { display: none; }
 :root[data-theme="dark"] .ico-moon { display: block; }
 
-/* ---------- Neofetch-style identity ----------
-   Logo on the left, key/value on the right, exactly like the neofetch
-   clone on the OSDC desktop.
-   -------------------------------------------- */
-.fetch {
-  display: flex;
-  align-items: center;
-  gap: clamp(18px, 4vw, 32px);
-  margin-bottom: clamp(24px, 4vw, 32px);
-}
-.fetch__mark {
-  flex: 0 0 auto;
-  width: clamp(96px, 22vw, 148px);
-  height: auto;
-}
-:root[data-theme="dark"] .fetch__mark { filter: invert(1); }
-
-.fetch__info { min-width: 0; flex: 1 1 auto; }
-.fetch__who {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-  white-space: nowrap;
-}
-.fetch__rule { height: 1px; background: var(--line); margin: 6px 0 8px; }
-.fetch__row {
-  margin: 0;
-  font-size: 13px;
+/* ---------- Intro ---------- */
+.intro { margin: 0 0 clamp(36px, 8vw, 64px); }
+.intro__who {
+  margin: 0 0 14px;
   color: var(--muted);
-  display: flex;
-  gap: 1ch;
+  text-transform: uppercase;
 }
-.fetch__key {
+.intro__lede {
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(19px, 4.6vw, 23px);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* ---------- Index ---------- */
+.label {
+  margin: 0 0 4px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.list { margin: 0 0 clamp(32px, 6vw, 48px); border-top: 1px solid var(--rule); }
+
+.entry {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(12px, 3vw, 20px);
+  padding: clamp(14px, 3vw, 18px) 0;
+  border-bottom: 1px solid var(--rule);
+  transition: border-color .15s ease;
+}
+.entry__num {
   flex: 0 0 auto;
-  width: 9ch;
+  width: 2ch;
+  color: var(--muted);
+  transition: color .15s ease;
+}
+.entry__body { flex: 1 1 auto; min-width: 0; }
+.entry__name {
+  display: block;
+  font-size: clamp(21px, 5.2vw, 27px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -.02em;
   color: var(--ink);
-  font-weight: 700;
+  transition: color .15s ease;
 }
-.fetch__val { min-width: 0; }
-
-.tagline {
-  margin: 0 0 clamp(28px, 5vw, 40px);
-  max-width: 68ch;
-  color: var(--ink);
+.entry__meta {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
 }
-.tagline::before { content: "# "; color: var(--faint); }
-
-/* ---------- Rows ----------
-   The core component. One link, one line of `ls --icons` output.
-   Hover inverts the row: no lift, no shadow, no card.
-   -------------------------- */
-.row {
-  display: flex;
-  align-items: center;
-  gap: 1.25ch;
-  padding: 7px 10px;
-  margin: 0 -10px;
-  color: var(--ink);
-  transition: background .1s linear, color .1s linear;
-}
-.row:hover,
-.row:focus-visible {
-  background: var(--accent);
-  color: var(--on-accent);
-}
-.row:hover .row__url,
-.row:focus-visible .row__url,
-.row:hover .row__note,
-.row:focus-visible .row__note,
-.row:hover .row__arrow,
-.row:focus-visible .row__arrow { color: inherit; }
-.row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-
-.row__ico { flex: 0 0 auto; display: grid; place-items: center; width: 16px; height: 16px; }
-.row__name { flex: 0 0 auto; width: 11ch; font-weight: 700; }
-.row__arrow { flex: 0 0 auto; color: var(--faint); }
-/* The URL is the payload of the row, so it never shrinks. */
-.row__url {
+.entry__go {
   flex: 0 0 auto;
   color: var(--muted);
-  white-space: nowrap;
+  font-size: 18px;
+  line-height: 1;
+  transition: color .15s ease, transform .15s ease;
 }
-/* The trailing `# comment` yields first, then disappears entirely. */
-.row__note {
-  flex: 1 1 0; min-width: 0;
-  text-align: right;
-  color: var(--faint);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.row__note::before { content: "# "; }
 
-.row--now .row__name { color: var(--accent); }
-.row--now:hover .row__name,
-.row--now:focus-visible .row__name { color: inherit; }
-
-/* Not a link itself, so it does not invert on hover. */
-.row--static { gap: 1.5ch; }
-.row--static:hover { background: none; color: var(--ink); }
-.row__mail {
-  font-weight: 700;
-  border-bottom: 1px solid var(--accent);
+a.entry:hover { border-bottom-color: var(--accent); }
+a.entry:hover .entry__name,
+a.entry:hover .entry__num,
+a.entry:hover .entry__go { color: var(--accent); }
+a.entry:hover .entry__go { transform: translate(3px, -3px); }
+a.entry:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
-.row__mail:hover { color: var(--accent); }
-.row__mail:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* The featured entry: the only place a name is set in the accent by default. */
+.entry--now .entry__name { color: var(--accent); }
 
 /* ---------- Copy button ---------- */
-.copybtn {
-  font: 400 13px var(--mono);
+.copy {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 12px;
   color: var(--muted);
   background: none;
-  border: 1px dashed var(--line);
-  padding: 2px 8px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 4px 10px;
   cursor: pointer;
-  transition: color .12s linear, border-color .12s linear, background .12s linear;
+  transition: color .15s ease, border-color .15s ease;
 }
-.copybtn:hover { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
-.copybtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* ---------- Footer ---------- */
-.footer {
-  margin-top: clamp(32px, 6vw, 48px);
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-  font-size: 12.5px;
+.foot {
   color: var(--muted);
+  line-height: 1.7;
 }
-.footer p { margin: 0 0 4px; }
-.footer a { color: var(--ink); border-bottom: 1px solid var(--accent); }
-.footer a:hover { color: var(--accent); }
-
-/* The one moving thing on the page. */
-.cursor {
-  display: inline-block;
-  width: 1ch; height: 1.05em;
-  vertical-align: text-bottom;
-  background: var(--accent);
-  animation: blink 1.1s steps(1) infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
+.foot p { margin: 0; }
+.foot a { color: var(--ink); box-shadow: inset 0 -1px 0 var(--accent); }
+.foot a:hover { color: var(--accent); }
 
 /* ---------- Modal ---------- */
 .modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; }
 .modal[hidden] { display: none; }
-.modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.6); }
+.modal__scrim { position: absolute; inset: 0; background: rgba(0,0,0,.5); }
 .modal__card {
   position: relative;
-  background: var(--surface);
-  border: 1px solid var(--accent);
-  padding: 14px;
-  max-width: 300px; width: 100%;
+  width: 100%; max-width: 296px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 20px;
+  text-align: center;
 }
-.modal__bar {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px;
-  margin: -14px -14px 14px;
-  padding: 5px 6px 5px 10px;
-  background: var(--accent);
-  color: var(--on-accent);
-}
-.modal__title { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
-.modal__close {
-  width: 20px; height: 20px;
+.modal__x {
+  position: absolute; top: 8px; right: 8px;
+  width: 28px; height: 28px;
   display: grid; place-items: center;
   padding: 0;
-  color: var(--on-accent);
-  background: none; border: 1px solid currentColor;
+  color: var(--muted);
+  background: none; border: 0;
   cursor: pointer;
 }
-.modal__close:focus-visible { outline: 2px solid var(--on-accent); outline-offset: 1px; }
+.modal__x:hover { color: var(--accent); }
+.modal__x:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.modal__title {
+  margin: 0 0 14px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
 
-/* The QR panel stays light in both themes. Inverted codes scan on most
+/* The QR stays on light paper in both themes. Inverted codes scan on most
    modern decoders but not all, and this one gets scanned off a stranger's
    phone at a booth, so it is not the place to get clever.
-   225px = 45 modules x 5px exactly (37 data + 8 quiet zone), so every
-   module lands on a whole pixel. If tools/qr.mjs settles on a different
-   version, re-derive: (size + 8) * 5. */
+   225px = 45 modules x 5px exactly (37 data + 8 quiet zone), so every module
+   lands on a whole pixel. If tools/qr.mjs picks another version, re-derive:
+   (size + 8) * 5. */
 .qr {
   display: block;
   width: 225px; height: 225px;
-  margin: 0 auto 10px;
-  background: #f4eddc;
+  margin: 0 auto 12px;
+  background: #faf9f6;
+  border-radius: 2px;
 }
-.modal__url { margin: 0 0 10px; font-size: 12.5px; color: var(--muted); text-align: center; word-break: break-all; }
-.modal__actions { display: flex; justify-content: center; }
+.modal__url { margin: 0 0 14px; color: var(--muted); word-break: break-all; }
 
 /* ---------- Toast ---------- */
 .toast {
-  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(6px);
   z-index: 60;
-  background: var(--accent); color: var(--on-accent);
-  font-size: 12.5px; font-weight: 700;
-  padding: 7px 14px;
+  background: var(--ink); color: var(--paper);
+  font-size: 13px; font-weight: 500;
+  padding: 9px 16px;
+  border-radius: 2px;
   opacity: 0; pointer-events: none;
-  transition: opacity .12s linear;
+  transition: opacity .18s ease, transform .18s ease;
 }
 .toast[hidden] { display: block; }
-.toast.show { opacity: 1; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ---------- Motion / a11y ---------- */
+/* ---------- a11y ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  .cursor { opacity: 1; }
 }
 
-/* ---------- Narrow ----------
-   A terminal reflows by dropping columns, not by restacking. The
-   trailing comment goes first, then the URL takes the slack.
-   ---------------------------- */
-@media (max-width: 620px) {
-  .row__note { display: none; }
-  .row__url { flex: 1 1 auto; }
-}
-@media (max-width: 460px) {
-  .fetch { gap: 14px; }
-  .fetch__key { width: 8ch; }
-  .row__name { width: 10ch; }
-}
 @media (max-width: 380px) {
-  body { font-size: 13px; }
-  .fetch { display: block; }
-  .fetch__mark { width: 108px; margin-bottom: 14px; }
+  .entry { gap: 10px; }
+  .entry__num { display: none; }
 }
