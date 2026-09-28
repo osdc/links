@@ -88,6 +88,7 @@
     var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     var fragments = [];
     var damage = 0;
+    var clicks = 0;
     var repairDelay;
     var repairTick;
     var impactTimer;
@@ -261,6 +262,13 @@
     });
 
     logoBreaker.addEventListener("click", function (event) {
+      clicks += 1;
+   
+      if (clicks === Math.abs(2005 - new Date().getFullYear())) {
+          window.location.href = "https://beans.osdc.dev";
+          return;
+      }
+       
       var point = event.detail === 0 ? logoCenter() : (lastPointer || { x: event.clientX, y: event.clientY });
       lastPointer = null;
 
