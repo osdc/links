@@ -344,8 +344,6 @@ a.entry:focus-visible {
   from { text-shadow: 0 0 4px var(--now-glow); }
   to   { text-shadow: 0 0 6px var(--now-glow), 0 0 18px var(--now-glow); }
 }
-  to   { text-shadow: 0 0 14px var(--now-glow); }
-}
 
 /* An action, not a destination. Same slot and same size as the arrow it
    replaces, so the right edge of every row still lines up; the dotted box is
