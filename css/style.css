@@ -339,24 +339,7 @@ a.entry:focus-visible {
 .label--now { color: var(--now); }
 .list--now .entry__ico,
 .list--now .entry__go { color: var(--now); }
-.list--now { overflow-x: clip; }
-.list--now .entry { position: relative; isolation: isolate; }
-.list--now .entry::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -36px 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 25% 30% at 40% 50%, color-mix(in srgb, var(--now-glow) 45%, transparent), transparent),
-    repeating-conic-gradient(from var(--ray) at 40% 50%, color-mix(in srgb, var(--now-glow) 14%, transparent) 0 4deg, transparent 4deg 14deg);
-  -webkit-mask: radial-gradient(ellipse 45% 50% at 40% 50%, #000 10%, transparent);
-  mask: radial-gradient(ellipse 45% 50% at 40% 50%, #000 10%, transparent);
-  animation: now-rays 40s linear infinite;
-}
 .list--now .entry__name { animation: now-glow 2.4s ease-in-out infinite alternate; }
-@property --ray { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-@keyframes now-rays { to { --ray: 360deg; } }
 @keyframes now-glow {
   from { text-shadow: 0 0 4px var(--now-glow); }
   to   { text-shadow: 0 0 6px var(--now-glow), 0 0 18px var(--now-glow); }
