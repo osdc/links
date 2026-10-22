@@ -28,6 +28,8 @@
   --muted:  #6b655c;
   --rule:   #e4e0d7;
   --accent: #c62d1c;
+  --now:    #12804a;
+  --now-glow: rgba(18, 128, 74, .35);
   --particle-hot:  #ef4b36;
   --particle-soft: #e98a7c;
 
@@ -46,6 +48,8 @@
   --muted:  #9a938a;
   --rule:   #2a2825;
   --accent: #ff6a55;
+  --now:    #4ade80;
+  --now-glow: rgba(74, 222, 128, .55);
   --particle-hot:  #ff9b8c;
   --particle-soft: #e84c33;
 
@@ -329,6 +333,17 @@ a.entry:focus-visible {
 
 /* The featured entry: the only place a name is set in the accent by default. */
 .entry--now .entry__name { color: var(--accent); }
+
+/* Time-bound block: its own colour, and a slow glow so it reads as live. */
+.list--now { --accent: var(--now); border-top-color: var(--now); }
+.label--now { color: var(--now); }
+.list--now .entry__ico,
+.list--now .entry__go { color: var(--now); }
+.list--now .entry__name { animation: now-glow 2.4s ease-in-out infinite alternate; }
+@keyframes now-glow {
+  from { text-shadow: 0 0 4px var(--now-glow); }
+  to   { text-shadow: 0 0 14px var(--now-glow); }
+}
 
 /* An action, not a destination. Same slot and same size as the arrow it
    replaces, so the right edge of every row still lines up; the dotted box is

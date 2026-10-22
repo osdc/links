@@ -306,6 +306,20 @@
     });
   }
 
+  /* ---------- copy code, then go ---------- */
+
+  document.querySelectorAll("a[data-copy]").forEach(function (link) {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      var code = link.getAttribute("data-copy");
+      var go = function (ms) { setTimeout(function () { location.href = link.href; }, ms); };
+      copyText(code).then(
+        function () { toast("Code copied: " + code); go(800); },
+        function () { toast("Couldn't copy. Code: " + code); go(2500); }
+      );
+    });
+  });
+
   /* ---------- share / QR modal ---------- */
 
   var modal = document.getElementById("shareModal");
